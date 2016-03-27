@@ -1,2 +1,2 @@
 # cx
-cx framework
+cx PHP 5 framework
