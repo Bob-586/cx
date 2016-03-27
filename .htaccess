@@ -1,0 +1,27 @@
+<IfModule mod_rewrite.c>
+    Options +FollowSymLinks -Indexes
+    RewriteEngine On
+# DENY ACCESS TO CORE DIRs
+    RewriteRule "^(models|views|controllers|includes|forms|templates|sql|classes|libraries|logs)/(.*)$" "-" [F]
+# TRACE and TRACK HTTP methods disabled to prevent XSS attacks
+    RewriteCond "%{REQUEST_METHOD}" "^TRAC[EK]"
+    RewriteRule ".*" "-" [L,R=405]
+# always send 404 on missing files in these folders
+    RewriteCond "%{REQUEST_FILENAME}" "!-f"
+    RewriteCond "%{REQUEST_FILENAME}" "!-d"
+    RewriteCond "%{REQUEST_FILENAME}" "!-l"
+    RewriteRule "^(assets|skin|js|css)/(.*)$" "-" [R=404,L,NS]
+# BLOCK ACCESS to non-existing files/folders/links
+    RewriteCond "%{REQUEST_FILENAME}" "!-f"
+    RewriteCond "%{REQUEST_FILENAME}" "!-d"
+    RewriteCond "%{REQUEST_FILENAME}" "!-l"
+    RewriteRule ".*" "-" [F]
+# BLOCK ACCESS to text/php/log/exe/com/bat/sh files
+    RewriteRule "^(.*).txt$" "-" [NC,F]
+    RewriteRule "^(.*).php$" "-" [NC,F]
+    RewriteRule "^(.*).log$" "-" [NC,F]
+    RewriteRule "^(.*).exe$" "-" [NC,F]
+    RewriteRule "^(.*).com$" "-" [NC,F]
+    RewriteRule "^(.*).bat$" "-" [NC,F]
+    RewriteRule "^(.*).sh$" "-" [NC,F]
+</IfModule>

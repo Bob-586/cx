@@ -1,0 +1,60 @@
+In general, PHP developers should not use “int” type hint for
+
+Arithmetics
+Array numeric key
+unless they are certain that data is in unsigned 32 bit integer range. (Do not ignore 32 bit CPUs)
+
+These are important for portable libraries/frameworks especially.
+
+In addition, PHP developers should realize “int” type hint raises fatal errors even when a value contains only digits which should be valid as integer. “float” type hint may lose precision significantly without errors unlike “int”.
+
+Current scalar type hint implementation is restrictive and usage is limited.
+
+Do not use scalar type hint blindly.
+Do not expect PHP to work as it used be with scalar type hints. i.e. Large numbers cause fatal error or truncated result.
+Beware that unconditional casts are evil, as it will never raise errors, and hides problems.
+Otherwise, you will end up with serious bugs including side wide DoS and/or interoperability issues. Like lessons from JSON, if you need to use type hints for numeric scalars
+
+Use “string” type hint for numeric scalars if you need hint.
+You may feel silly to use “string” scalar type hint for numbers, but this is the best solution for external data now.
+
+-----
+
+Where Developer Can NOT use Basic Type Hint
+
+These are examples.
+
+Unsafe with “int” and/or “float” type hint:
+
+Database record ID
+Database numeric
+JSON numeric
+Numeric values in XML
+Numeric values in YAML
+Numeric values from Web browser
+Any strings look like numbers
+
+
+Where Developer Can Use Basic Type Hint
+
+When developer is sure number range within signed 32 bit integer (PHP’s “int” on 32 bit CPU), “int” type hint can be safely used.
+
+Safe with “int” type hint:
+
+Year
+Age
+Top 10 list number
+Country number
+Anything that fits unsigned 32 bit integers absolutely.
+“float” is safe if number is signed 32 bit integer (PHP’s “int” on 32 bit CPU) or IEEE 754 double.
+
+Save with “float” type hint:
+
+Temperature
+Distance
+Weight
+Height
+Anything that fits IEEE 754 double and do not lose precision absolutely.
+Please do not forget that developer MUST NOT store values exceed “int” or “float” limit to anywhere that are applied to basic type hints. Otherwise, you may end up with fatal error, i.e. DoS, or losing precision.
+
+“array” is safe. Use it. Don’t forget that non-array value raises fatal error.

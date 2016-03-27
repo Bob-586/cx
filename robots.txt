@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /assets/
+Disallow: /libraries/
+Disallow: /logs/
+Disallow: /classes/
+Disallow: /includes/
+Disallow: /settings/
