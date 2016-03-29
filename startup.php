@@ -20,6 +20,7 @@ require_once CX_INCLUDES_DIR . "common_functions.php";
 
 function cx_folder_name() {
   $paths = dirname(__FILE__);
+  $paths = str_replace('\\', "/", $paths); // Fix for Windows
   $folder_name = substr($paths, strrpos($paths, '/'));
   return $folder_name;  
 }
