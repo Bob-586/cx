@@ -21,14 +21,14 @@ function cx_down($hours_down) {
     <meta name="robots" content="no-follow">
     <link rel="shortcut icon" href="favicon.ico">
     <title>Site is down for maintenance</title>
-    <link rel="stylesheet" href="../cx/assets/bootstrap/css/bootstrap.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="<?= CX_BASE_REF ?>/cx/assets/uikit/css/uikit.gradient.min.css" type="text/css" media="all" />
   </head>
   <body id="my-page">
     <div id="wrap">
-      <div class="my-container">
+      <div class="uk-container uk-container-center">
         <div id="autosavemessage">
           <div class="page-header">
-            <div class="alert alert-danger">
+            <div class="uk-alert uk-alert-danger">
                 <header>Site is down for maintenance.</header>  
             </div>
           </div>

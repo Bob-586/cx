@@ -644,9 +644,8 @@ class app {
   }
 
   public function datatables_code() {
-    $this->add_css(CX_BASE_REF.'/assets/bootstrap/css/dataTables.bootstrap.css');
-    $this->add_js(CX_BASE_REF.'/assets/jquery/jquery.dataTables.min.js');
-    $this->add_js(CX_BASE_REF.'/assets/bootstrap/js/dataTables.bootstrap.js');
+    $this->add_css(CX_BASE_REF.'/assets/datatables/datatables.min.css');
+    $this->add_js(CX_BASE_REF.'/assets/datatables/datatables_no_jquery.min.js');
   }
 
   public function broken_error() {

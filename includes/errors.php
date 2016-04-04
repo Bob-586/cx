@@ -64,8 +64,8 @@ function cx_exception_handler($exception) {
   $err .= " thrown in: " . $exception->getFile() . " on line: " . $exception->getLine() . "\r\n";
   error_log($err);
 
-  $msg = '<link rel="stylesheet" href="' . CX_BASE_REF . '/assets/bootstrap/css/bootstrap.min.css" type="text/css" media="all" />';
-  $msg .= '<div class="alert alert-danger">';
+  $msg = '<link rel="stylesheet" href="' . CX_BASE_REF . '/assets/uikit/css/uikit.gradient.min.css" type="text/css" media="all" />';
+  $msg .= '<div class="uk-alert uk-alert-danger">';
   $msg .= '<b>Fatal error</b>:  Uncaught exception \'' . get_class($exception) . '\' with message ';
   $msg .= $exception->getMessage() . '<br>';
   $msg .= 'Stack trace:<pre>' . $exception->getTraceAsString() . '</pre>';
