@@ -36,25 +36,28 @@ function cx_email_error($a_error) {
     return false; // Avoid repeated messages as it did NOT update correctly!
   }
 
-  $headers = 'MIME-Version: 1.0' . "\r\n";
-  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-  // Additional headers
-
   $to = cx_configure::a_get('cx', 'admin_name');
-
+  $email = cx_configure::a_get('cx', 'admin_email');
+  
   if (defined('CX_SITE_NAME')) {
     $site = CX_SITE_NAME;
   } else {
     $site = 'system';
   }
-  $email = cx_configure::a_get('cx', 'admin_email');
+  
   $subject = 'System error in ' . $site;
   $from = 'noreply@' . str_replace(" ", "_", $site);
-  $headers .= 'To: ' . $to . ' <' . $email . '>' . "\r\n";
-  $headers .= 'From: ' . $site . ' <' . $from . '>' . "\r\n";
 
   if (!empty($email) && cx_configure::a_get('cx', 'email_on_errors') === true) {
-    mail($email, $subject, $errors, $headers);
+    if ($email === false || empty($email)) {
+      return false;
+    }
+      
+    if (! empty($to)) {
+      cx_send_email(array('to'=>array('address'=>$email, 'name'=>$to),'from'=>$from,'subject'=>$subject,'message'=>$errors));
+    } else {
+      cx_send_email(array('to'=>$email,'from'=>$from,'subject'=>$subject,'message'=>$errors));
+    }
   }
 //  cx_twilio($errors);
 }

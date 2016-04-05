@@ -27,7 +27,8 @@ function cx_folder_name() {
 define('CX_BASE_REF', CX_SITE_URL . cx_folder_name() );
 // PROJECT_BASE_REF defined in common_functions.php
 
-require_once CX_INCLUDES_DIR . "errors.php";
+require_once CX_INCLUDES_DIR . 'emailer.php';
+require_once CX_INCLUDES_DIR . 'errors.php';
 
 if (cx_configure::exists('php_timezone')) {
   date_default_timezone_set(cx_configure::get('php_timezone'));
