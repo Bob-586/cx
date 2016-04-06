@@ -48,11 +48,11 @@ function cx_email_error($a_error) {
   $subject = 'System error in ' . $site;
   $from = 'noreply@' . str_replace(" ", "_", $site);
 
-  if (!empty($email) && cx_configure::a_get('cx', 'email_on_errors') === true) {
-    if ($email === false || empty($email)) {
-      return false;
-    }
-      
+  if ($email === false || empty($email)) {
+    return false;
+  }
+  
+  if (cx_configure::a_get('cx', 'email_on_errors') === true) {     
     if (! empty($to)) {
       cx_send_email(array('to'=>array('address'=>$email, 'name'=>$to),'from'=>$from,'subject'=>$subject,'message'=>$errors));
     } else {
@@ -60,6 +60,22 @@ function cx_email_error($a_error) {
     }
   }
 //  cx_twilio($errors);
+}
+
+function cx_json_error_h($data) {
+  if (! isset($_GET['callback']) && ! isset($_GET['json']) ) {
+    return false;
+  }
+  
+  $status_code = 501;
+  if (!headers_sent()) {
+    header($_SERVER['SERVER_PROTOCOL'] . " " . $status_code);
+    header("Access-Control-Allow-Orgin: *"); 
+    header("Access-Control-Allow-Methods: *");
+    header('Content-Type: application/json; charset=utf-8', true, intval($status_code));
+  }
+  echo json_encode(array('success'=>false,'error'=>$data));
+  exit;
 }
 
 function cx_exception_handler($exception) {
@@ -75,6 +91,8 @@ function cx_exception_handler($exception) {
   $msg .= 'thrown in <b>' . $exception->getFile() . '</b> on line <b>' . $exception->getLine() . '</b><br>';
   $msg .= '</div>';
 
+  cx_json_error_h($msg);
+    
   if (\cx_configure::a_get('cx', 'live') === true) {
     cx_email_error($msg);
     cx_global_error_handler();
@@ -101,6 +119,7 @@ function cx_custom_error_checker() {
     $msg = "Error: {$a_errors['message']} File:{$a_errors['file']} Line:{$a_errors['line']}.";
     error_log($msg);
 
+    cx_json_error_h($msg);
     if (\cx_configure::a_get('cx', 'live') === true) {
       cx_email_error($msg);
       cx_global_error_handler();
@@ -140,6 +159,8 @@ function cx_global_error_handler($errno=0, $errstr='', $errfile='', $errline=0) 
     error_log($err);
   }
 
+  cx_json_error_h($err);
+  
   if (is_on_error_page() === true) {
     require PROJECT_BASE_DIR . "templates" . DS . "error.tpl.php";
     exit(1); // Prevent HTML Looping!!!
