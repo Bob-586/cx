@@ -11,7 +11,8 @@ final class crypt {
   
   public $cleartext;
   public $ciphertext;
-  
+
+  private $url_encode = false;
   private $use_openssl;
   private $binary;
   private $key;
@@ -46,6 +47,12 @@ final class crypt {
       $this->use_openssl = $useit;
     }
   } 
+  
+  public function set_url_encode($bool) {
+    if ($this->iv_size === false) {
+      $this->url_encode = $bool;
+    }
+  }
   
   public function change_security($level) {
     if ($this->iv_size === false) {
@@ -165,7 +172,11 @@ final class crypt {
     } else {
       $encrypted = \mcrypt_encrypt($this->algorithm, $key, $this->cleartext, $this->mode, $this->iv);
     }
-    $this->ciphertext = (!$this->binary) ? base64_encode($this->iv . $encrypted) : $encrypted;
+    if (!$this->binary) {
+      $this->ciphertext = (!$this->url_encode) ? base64_encode($this->iv . $encrypted) : \cx\app\main_functions::base64url_encode($this->iv . $encrypted);
+    } else {
+      $this->ciphertext = $encrypted;
+    }
     return $this->ciphertext;
   }
 
@@ -180,7 +191,12 @@ final class crypt {
       $this->generate_iv();
     }
 
-    $string = base64_decode($this->ciphertext);
+    if (!$this->binary) {
+      $string = (!$this->url_encode) ? base64_decode($this->ciphertext) : \cx\app\main_functions::base64url_decode($this->ciphertext);
+    } else {
+      $string = $this->ciphertext;
+    }
+    
     $iv = (!$this->binary && $iv === false) ? substr($string, 0, $this->iv_size) : $iv;
 
     $ciphertext = substr($string, $this->iv_size);
