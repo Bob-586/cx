@@ -109,7 +109,7 @@ function cx_send_email($options) {
       case 'attachment':
       case 'attach':
         if (is_array($value)) {
-          $attachment = (isset($value['file'])) ? $value['file'] : value[0];
+          $attachment = (isset($value['file'])) ? $value['file'] : $value[0];
           $file_name = (isset($value['name'])) ? $value['name'] : false;
           if ($file_name === false) {
             $mail->addAttachment($attachment);
