@@ -259,7 +259,7 @@ class request extends app {
   }
 
   /*
-   * Please use auto_var, instead of get,posr, or request
+   * Please use auto_var, instead of get, post, or request
    */
   
   public function auto_var($var) {
@@ -382,8 +382,16 @@ class static_request {
        * @ todo add cookie
        */
       case 'request':
-      default:  
         $result = (isset($_REQUEST[$var])) ? $_REQUEST[$var] : ':null';
+        break;
+
+      case 'auto':
+      default:
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+          $result = (isset($_GET[$var])) ? $_GET[$var] : ':null';
+        } else {
+          $result = (isset($_POST[$var])) ? $_POST[$var] : ':null';
+        }
         break;
     }
    
