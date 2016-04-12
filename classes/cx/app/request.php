@@ -257,6 +257,18 @@ class request extends app {
         break;
     }
   }
+
+  /*
+   * Please use auto_var, instead of get,posr, or request
+   */
+  
+  public function auto_var($var) {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+      return (isset($_GET[$var])) ? $_GET[$var] : ':null';  
+    } else {
+      return (isset($_POST[$var])) ? $_POST[$var] : ':null';
+    }
+  }
   
   public function get_var($var) {
     return (isset($_GET[$var])) ? $_GET[$var] : ':null';
