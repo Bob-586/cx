@@ -185,6 +185,25 @@ function cx_not_done() {
   }
 }
 
+/**
+ * Purpose to record Errors thrown, and if (live) show error page (!live) get error
+ * @param type $Ex exception
+ * @return (! live) Error or (live) false
+ */
+function get_exception($Ex) {
+  if (! is_object($Ex)) {
+    return false;
+  }
+  if (method_exists($Ex, 'getMessage')) {
+    error_log($Ex->getMessage());
+    if (\cx_configure::a_get('cx', 'live') === false) {
+      return $Ex->getMessage();
+    }
+  }
+  return false;
+}
+  
+
 class CxException extends Exception {
   
 }
