@@ -139,6 +139,10 @@ class main_functions {
     return (self::found($column, "`") || self::found($column, ".")) ? $column : "`{$column}`";
   }
 
+  public static function get_array_index($a, $index) {
+    return (array_key_exists($index, $a)) ? $a[$index] : false;
+  }
+  
   public static function found($data, $find) {
     return (stripos($data, $find) !== false);
   }
@@ -701,8 +705,9 @@ class main_functions {
     );
   }
 
-  public static function country_array() {
+  public static function countries_array() {
     return array(
+        'AX' => 'Aland Islands',
         'AF' => 'Afghanistan',
         'AL' => 'Albania',
         'DZ' => 'Algeria',
@@ -737,13 +742,14 @@ class main_functions {
         'BN' => 'Brunei',
         'BG' => 'Bulgaria',
         'BF' => 'Burkina Faso',
+        'AR' => 'Burma', 
         'BI' => 'Burundi',
         'KH' => 'Cambodia',
         'CM' => 'Cameroon',
         'CA' => 'Canada',
         'CV' => 'Cape Verde',
         'KY' => 'Cayman Islands',
-        'CF' => 'Central African Republic static',
+        'CF' => 'Central African Republic',
         'TD' => 'Chad',
         'CL' => 'Chile',
         'CN' => 'China',
@@ -759,19 +765,21 @@ class main_functions {
         'CU' => 'Cuba',
         'CY' => 'Cyprus',
         'CZ' => 'Czech Republic static',
-        'CD' => 'Democratic Republic static Of Congo (Zaire)',
+        'CD' => 'Democratic Republic Of Congo (Zaire)',
         'DK' => 'Denmark',
         'DJ' => 'Djibouti',
         'DM' => 'Dominica',
-        'DO' => 'Dominican Republic static',
+        'DO' => 'Dominican Republic',
         'TP' => 'East Timor',
         'EC' => 'Ecuador',
         'EG' => 'Egypt',
         'SV' => 'El Salvador',
+        'GB' => 'England',
         'GQ' => 'Equatorial Guinea',
         'ER' => 'Eritrea',
         'EE' => 'Estonia',
         'ET' => 'Ethiopia',
+        'EU' => 'European Union',
         'FK' => 'Falkland Islands (Malvinas)',
         'FO' => 'Faroe Islands',
         'FJ' => 'Fiji',
@@ -844,6 +852,7 @@ class main_functions {
         'MD' => 'Moldova',
         'MC' => 'Monaco',
         'MN' => 'Mongolia',
+        'ME' => 'Montenegro',
         'MS' => 'Montserrat',
         'MA' => 'Morocco',
         'MZ' => 'Mozambique',
@@ -866,6 +875,7 @@ class main_functions {
         'OM' => 'Oman',
         'PK' => 'Pakistan',
         'PW' => 'Palau',
+        'PS' => 'Palestine',
         'PA' => 'Panama',
         'PG' => 'Papua New Guinea',
         'PY' => 'Paraguay',
@@ -892,7 +902,7 @@ class main_functions {
         'SC' => 'Seychelles',
         'SL' => 'Sierra Leone',
         'SG' => 'Singapore',
-        'SK' => 'Slovak Republic static',
+        'SK' => 'Slovakia',
         'SI' => 'Slovenia',
         'SB' => 'Solomon Islands',
         'SO' => 'Somalia',
@@ -930,7 +940,7 @@ class main_functions {
         'UY' => 'Uruguay',
         'UZ' => 'Uzbekistan',
         'VU' => 'Vanuatu',
-        'VA' => 'Vatican City (Holy See)',
+        'VA' => 'Vatican City',
         'VE' => 'Venezuela',
         'VN' => 'Vietnam',
         'VG' => 'Virgin Islands (British)',

@@ -3,6 +3,7 @@ if (! empty($_SERVER['REQUEST_URI'])) {
   
   function cx_site_url() {
     $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,strpos( $_SERVER["SERVER_PROTOCOL"],'/'))).'://';
+    define('PROTOCOL', $protocol);
     $domainName = $_SERVER['HTTP_HOST'];
     return $protocol . $domainName;
   }
@@ -28,6 +29,7 @@ if (! empty($_SERVER['REQUEST_URI'])) {
   define('CX_CANONICAL', '');
   define('CX_BASE_REF', '');  
   define("BROWSER", '');
+  define('PROTOCOL', '');
 }
 
 /*

@@ -11,9 +11,10 @@ use cx\app\main_functions as main_fn;
 require_once CX_BASE_DIR . 'classes' . DS . 'cx' . DS . 'form' . DS . 'html_tags.php';
 require_once CX_BASE_DIR . 'classes' . DS . 'cx' . DS . 'form' . DS . 'aliases.php';
 require_once CX_BASE_DIR . 'classes' . DS . 'cx' . DS . 'form' . DS . 'commands.php';
+require_once CX_BASE_DIR . 'classes' . DS . 'cx' . DS . 'form' . DS . 'semantic_ui.php';
 
 class form extends app {
-  use aliases, commands;
+  use aliases, commands, semantic_ui;
   
   protected $formname;
   protected $router;

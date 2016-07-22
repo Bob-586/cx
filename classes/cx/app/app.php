@@ -15,8 +15,7 @@ require_once PROJECT_BASE_DIR . 'classes' . DS . 'app' . DS . 'assets.php';
 
 class app {
   
-  use security;
-  use assets;
+  use security, assets;
   
   public $status_code = '200';
   public $compression_level = 0;
@@ -193,7 +192,8 @@ class app {
    * @param uri of view
    * @return path without .. in it
    */
-  public function filter_uri($uri) {
+  public function filter_uri($uri, $secure = true) {
+    $uri = ($secure === true) ? preg_replace('#[^/\a-zA-Z0-9_]#', '', $uri) : $uri;
     return str_replace('..', '', $uri);
   }
 
@@ -605,6 +605,10 @@ class app {
     }
   }
 
+  public function js_log($log) {
+    $this->add_to_javascript("cx_log('{$log}');");
+  }
+  
   public function add_to_javascript($js) {
     if (!empty($js)) {
       $this->scripts .= $this->inline_js($js);
@@ -614,13 +618,47 @@ class app {
   public function form_js($js) {
     $this->scripts .= $js;
   }
-  
+
+  private function wrap_asset($file, $scope = '') {
+    switch(strtolower($scope)) {
+      case 'project':
+      case 'app':
+        $safe_file = $this->filter_uri($file);
+        $cx = 'assets/'.$safe_file;
+        if (file_exists(PROJECT_BASE_DIR . $cx)) {
+          return PROJECT_BASE_REF . '/' . $cx;
+        } else {
+          return false;
+        }              
+      case 'framework':
+      case 'cx':
+        $safe_file = $this->filter_uri($file);
+        $cx = 'assets/'.$safe_file;
+        if (file_exists(CX_BASE_DIR . $cx)) {
+          return CX_BASE_REF . '/' . $cx;
+        } else {
+          return false;
+        }      
+      case 'cdn':
+        return (cx_found($file, '://') === true) ? $file : PROTOCOL . $file;
+      default:
+      case '':
+        return $file;
+    }
+  }
+
   /**
    * @method add_css
    * @param file path to the css file being added
    */
-  public function add_css($file) {
-    $this->styles .= $this->wrap_css($file);
+  public function add_css($file, $scope = '') {
+    $css = $this->wrap_asset($file, $scope);
+    if ($css === false) {
+      $this->js_log($file . " - {$scope} Asset Failed to Load!");
+      return false;
+    }  
+    $this->styles .= $this->wrap_css($css);
+    return true;
   }
 
   public function add_js_onready($code) {
@@ -631,16 +669,33 @@ class app {
    * @method add_js
    * @param file path to the JS file being added
    */
-  public function add_js($file) {
-    $this->scripts .= $this->wrap_js($file);
+  public function add_js($file, $scope = '') {
+   $js = $this->wrap_asset($file, $scope);
+    if ($js === false) {
+      $this->js_log($file . " - {$scope} Asset Failed to Load!");
+      return false;
+    }      
+    $this->scripts .= $this->wrap_js($js);
+    return true;
   }
 
-  public function add_main_css($file) {
-    $this->main_styles .= $this->wrap_css($file);
+  public function add_main_css($file, $scope = '') {
+    $css = $this->wrap_asset($file, $scope);
+    if ($css === false) {
+      $this->js_log($file . " - {$scope} Asset Failed to Load!");
+      return false;
+    }      
+    $this->main_styles .= $this->wrap_css($css);
+    return true;    
   }
 
-  public function add_main_js($file) {
-    $this->main_scripts .= $this->wrap_js($file);
+  public function add_main_js($file, $scope = '') {
+    $js = $this->wrap_asset($file, $scope);
+    if ($js === false) {
+      $this->js_log($file . " - {$scope} Asset Failed to Load!");
+      return false;
+    }          
+    $this->main_scripts .= $this->wrap_js($js);
   }
 
   public function datatables_code() {
@@ -802,5 +857,20 @@ class app {
   private function inline_js($code) {
     return "<script type=\"text/javascript\">\r\n//<![CDATA[\r\n    {$code}\r\n //]]> \r\n </script>\r\n";
   }
+  
+  public function semantic_ui_component($component) {
+    $safe_component = $this->filter_uri($component);
+
+    $js = 'assets/semantic_ui/components/'.$safe_component.'.min.js';
+    $css = 'assets/semantic_ui/components/'.$safe_component.'.min.css';
+
+    if (file_exists(CX_BASE_DIR . $js)) {
+      $this->add_js(CX_BASE_REF . '/' . $js);
+    }
+    
+    if (file_exists(CX_BASE_DIR . $css)) {
+      $this->add_css(CX_BASE_REF . '/' . $css);
+    }
+  }  
   
 }
